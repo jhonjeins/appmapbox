@@ -1,0 +1,68 @@
+{
+  "project_info": {
+    "project_number": "908386016154",
+    "project_id": "trabajo-2021",
+    "storage_bucket": "trabajo-2021.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:908386016154:android:452446c9ec5af7492f3823",
+        "android_client_info": {
+          "package_name": "com.jhonj.pgrs"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "908386016154-s1kuqrvf5uqrjn955dhcmc1esevnqsi5.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBUcwb7jo2ywH7FhMQjqZ21nrMExdWbyAM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "908386016154-s1kuqrvf5uqrjn955dhcmc1esevnqsi5.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:908386016154:android:31634ea927e8074c2f3823",
+        "android_client_info": {
+          "package_name": "com.jhonj.residuos"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "908386016154-s1kuqrvf5uqrjn955dhcmc1esevnqsi5.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBUcwb7jo2ywH7FhMQjqZ21nrMExdWbyAM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "908386016154-s1kuqrvf5uqrjn955dhcmc1esevnqsi5.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

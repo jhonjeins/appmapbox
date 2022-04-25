@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:title="Información general">
+        <menu>
+            <item
+                android:id="@+id/inicio"
+                android:icon="@drawable/ic_map"
+                android:title="Inicio"/>
+            <item
+                android:id="@+id/empresas"
+                android:icon="@drawable/truck"
+                android:title="Empresas recolección"/>
+            <item
+                android:id="@+id/gestores"
+                android:icon="@drawable/gestores"
+                android:title="Gestores de residuos"/>
+            <item
+                android:id="@+id/criticos"
+                android:icon="@drawable/critico"
+                android:title="Puntos criticos"/>
+            <item
+                android:id="@+id/bodegas"
+                android:icon="@drawable/almacen"
+                android:title="Bodegas reciclaje"/>
+            <item
+                android:id="@+id/cestas"
+                android:icon="@drawable/cesta"
+                android:title="Ubicación cestas basura"/>
+        </menu>
+    </item>
+    <item android:title="Acumulación de residuos">
+        <menu>
+            <item
+                android:id="@+id/indebido"
+                android:icon="@drawable/basura"
+                android:title="Almacenamiento colectivo"/>
+            <item
+                android:id="@+id/clandestino"
+                android:icon="@drawable/basura"
+                android:title="Disposición inadecuada"/>
+        </menu>
+    </item>
+</menu>
