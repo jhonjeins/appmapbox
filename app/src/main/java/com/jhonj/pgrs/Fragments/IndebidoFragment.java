@@ -11,6 +11,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -76,10 +77,10 @@ public class IndebidoFragment extends Fragment implements OnMapReadyCallback, Pe
     private final String ID = "indebido";
     private final String URL_GET_DATA = "https://proygrs.herokuapp.com/indebido_get.php";
     private static final String PROPERTY_SELECTED = "selected";
-    private static final String PROPERTY_NAME = "gid";
-    private static final String PROPERTY_CAPITAL = "pacdes";
-    private static final String PROPERTY_PRECIO = "pacnombar";
-    private static final String PROPERTY_RESEÑA = "valor_crit";
+    private static final String PROPERTY_NAME = "nombre";
+    private static final String PROPERTY_CRITIC = "valor_crit";
+    private static final String PROPERTY_BARRIO = "barrio";
+    private static final String PROPERTY_DESCRIPCION = "descripcion";
     private GeoJsonSource geoJsonSource;
     FeatureCollection featureCollection;
     private static final String CALLOUT_LAYER_ID = "CALLOUT_LAYER_ID";
@@ -90,7 +91,7 @@ public class IndebidoFragment extends Fragment implements OnMapReadyCallback, Pe
     private DirectionsRoute currentRoute;
     private static final String TAG = "DirectionsActivity";
     private NavigationMapRoute navigationMapRoute;
-
+    private ImageButton img_report_indebido;
     public IndebidoFragment() {
     }
 
@@ -99,6 +100,14 @@ public class IndebidoFragment extends Fragment implements OnMapReadyCallback, Pe
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         Mapbox.getInstance(getActivity(), getString(R.string.mapbox_access_token));
         mview = inflater.inflate(R.layout.indebido_fragment, container, false);
+        img_report_indebido = mview.findViewById(R.id.img_report_indebido);
+        img_report_indebido.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(getContext(),  "Hola", Toast.LENGTH_SHORT).show();
+            }
+        });
+
         return mview;
     }
 
@@ -119,9 +128,10 @@ public class IndebidoFragment extends Fragment implements OnMapReadyCallback, Pe
                     public void onStyleLoaded(@NonNull Style style) {
                         enableLocationComponent(style);
                         addDestinationIconSymbolLayer(style);
-                        new LoadGeoJsonDataTask(IndebidoFragment.this).execute();
+                        new IndebidoFragment.LoadGeoJsonDataTask(IndebidoFragment.this).execute();
                         mapboxMap.addOnMapClickListener(IndebidoFragment.this);
                         mapboxMap.addOnMapLongClickListener(IndebidoFragment.this);
+
                     }
                 }
         );
@@ -168,6 +178,7 @@ public class IndebidoFragment extends Fragment implements OnMapReadyCallback, Pe
 
     @Override
     public boolean onMapLongClick(@NonNull LatLng point) {
+
         Point destinationPoint = Point.fromLngLat(point.getLongitude(), point.getLatitude());
         Point originPoint = Point.fromLngLat(locationComponent.getLastKnownLocation().getLongitude(),
                 locationComponent.getLastKnownLocation().getLatitude());
@@ -275,7 +286,7 @@ public class IndebidoFragment extends Fragment implements OnMapReadyCallback, Pe
     private void setUpInfoWindowLayer(@NonNull Style loadedStyle) {
         loadedStyle.addLayer(new SymbolLayer(CALLOUT_LAYER_ID, GEOJSON_SOURCE_ID)
                 .withProperties(
-                        iconImage("{name}"),
+                        iconImage("{nombre}"),
                         iconAnchor(ICON_ANCHOR_BOTTOM),
                         iconAllowOverlap(true),
                         iconOffset(new Float[]{-2f, -28f}))
@@ -334,7 +345,7 @@ public class IndebidoFragment extends Fragment implements OnMapReadyCallback, Pe
         }
     }
 
-    static class LoadGeoJsonDataTask extends AsyncTask<Void, Void, FeatureCollection> {
+    private static class LoadGeoJsonDataTask extends AsyncTask<Void, Void, FeatureCollection> {
 
         private final WeakReference<IndebidoFragment> activityRef;
 
@@ -367,7 +378,11 @@ public class IndebidoFragment extends Fragment implements OnMapReadyCallback, Pe
             }
 
             activity.setUpData(featureCollection);
-            new GenerateViewIconTask(activity).execute(featureCollection);
+            new IndebidoFragment.GenerateViewIconTask(activity).execute(featureCollection);
+
+            Toast.makeText(activity.getContext(),
+                    R.string.tap_on_marker_instruction,
+                    Toast.LENGTH_SHORT).show();
         }
 
         public static String getJSON(String url) {
@@ -439,7 +454,7 @@ public class IndebidoFragment extends Fragment implements OnMapReadyCallback, Pe
                     BubbleLayout bubbleLayout = (BubbleLayout)
                             inflater.inflate(R.layout.symbol_layer_info_window_layout_callout, null);
 
-                    String str = feature.getStringProperty(PROPERTY_RESEÑA);
+                    String str = feature.getStringProperty(PROPERTY_NAME);
                     StringBuilder desc = new StringBuilder();
                     for (int i = 0; i < str.length(); i++) {
                         if (i > 0 && (i % 40 == 0)) {
@@ -454,12 +469,12 @@ public class IndebidoFragment extends Fragment implements OnMapReadyCallback, Pe
                     titleTextView.setText(name);
 
                     //if(feature.properties().has("horario"))
-                    String style = feature.getStringProperty(PROPERTY_CAPITAL);
-                    style += "\n" + "Contacto: " + feature.getStringProperty(PROPERTY_PRECIO);
-                    style += "\n" + "Dirección: " + str;
+                    String style = feature.getStringProperty(PROPERTY_CRITIC);
+                    style += "\n" + "Descripción: " + feature.getStringProperty(PROPERTY_DESCRIPCION);
+                    style += "\n" + "Barrio: " + feature.getStringProperty(PROPERTY_BARRIO);
                     TextView descriptionTextView = bubbleLayout.findViewById(R.id.info_window_description);
                     descriptionTextView.setText(
-                            String.format(activity.getString(R.string.capital), style));
+                            String.format(activity.getString(R.string.clandestino), style));
 
 
                     int measureSpec = View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED);
@@ -469,7 +484,7 @@ public class IndebidoFragment extends Fragment implements OnMapReadyCallback, Pe
 
                     bubbleLayout.setArrowPosition(measuredWidth / 2 - 5);
 
-                    Bitmap bitmap = SymbolGenerator.generate(bubbleLayout);
+                    Bitmap bitmap = IndebidoFragment.SymbolGenerator.generate(bubbleLayout);
                     imagesMap.put(name, bitmap);
                     viewMap.put(name, bubbleLayout);
                 }
@@ -490,9 +505,6 @@ public class IndebidoFragment extends Fragment implements OnMapReadyCallback, Pe
                     activity.refreshSource();
                 }
             }
-            Toast.makeText(activity.getContext(),
-                    R.string.tap_on_marker_instruction,
-                    Toast.LENGTH_SHORT).show();
         }
     }
 

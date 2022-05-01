@@ -10,4 +10,12 @@
     <color name="teal_700">#FF018786</color>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+    <color name="transparentblack">#b9000000</color>
+    <color name="red">#FF000E</color>
+    <color name="transparent">#00FFFFFF</color>
+    <color name="gray">#b6b6b6</color>
+    <color name="graybackground">#e9e9e9</color>
+    <color name="colorgradient">#28BF62</color>
+
+
 </resources>

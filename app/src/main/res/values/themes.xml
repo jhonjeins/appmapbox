@@ -13,4 +13,12 @@
         <item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimaryVariant</item>
         <!-- Customize your theme here. -->
     </style>
+
+
+
+    <style name="PSButton.Round.Colors" parent="@style/Widget.AppCompat.Button.Colored">
+        <item name="colorButtonNormal">@android:color/black</item>
+        <item name="android:textColor">@color/black</item>
+        <item name="android:background">@drawable/background_color_colors_button</item>
+    </style>
 </resources>

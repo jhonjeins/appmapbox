@@ -11,6 +11,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -76,10 +77,9 @@ public class ClandestinoFragment extends Fragment implements OnMapReadyCallback,
     private final String ID = "clandestino";
     private final String URL_GET_DATA = "https://proygrs.herokuapp.com/clandestino_get.php";
     private static final String PROPERTY_SELECTED = "selected";
-    private static final String PROPERTY_NAME = "gid";
-    private static final String PROPERTY_CAPITAL = "pacdes";
-    private static final String PROPERTY_PRECIO = "pacnombar";
-    private static final String PROPERTY_RESEÑA = "valor_crit";
+    private static final String PROPERTY_NAME = "direccion";
+    private static final String PROPERTY_CRITIC = "valor_crit";
+    private static final String PROPERTY_BARRIO = "barrio";
     private GeoJsonSource geoJsonSource;
     FeatureCollection featureCollection;
     private static final String CALLOUT_LAYER_ID = "CALLOUT_LAYER_ID";
@@ -90,7 +90,7 @@ public class ClandestinoFragment extends Fragment implements OnMapReadyCallback,
     private DirectionsRoute currentRoute;
     private static final String TAG = "DirectionsActivity";
     private NavigationMapRoute navigationMapRoute;
-
+    private ImageButton img_report_clandestino;
     public ClandestinoFragment() {
     }
 
@@ -99,6 +99,14 @@ public class ClandestinoFragment extends Fragment implements OnMapReadyCallback,
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         Mapbox.getInstance(getActivity(), getString(R.string.mapbox_access_token));
         mview = inflater.inflate(R.layout.clandestino_fragment, container, false);
+        img_report_clandestino = mview.findViewById(R.id.img_report_clandestino);
+        img_report_clandestino.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(getContext(),  "Hola", Toast.LENGTH_SHORT).show();
+            }
+        });
+
         return mview;
     }
 
@@ -119,9 +127,10 @@ public class ClandestinoFragment extends Fragment implements OnMapReadyCallback,
                     public void onStyleLoaded(@NonNull Style style) {
                         enableLocationComponent(style);
                         addDestinationIconSymbolLayer(style);
-                        new LoadGeoJsonDataTask(ClandestinoFragment.this).execute();
+                        new ClandestinoFragment.LoadGeoJsonDataTask(ClandestinoFragment.this).execute();
                         mapboxMap.addOnMapClickListener(ClandestinoFragment.this);
                         mapboxMap.addOnMapLongClickListener(ClandestinoFragment.this);
+
                     }
                 }
         );
@@ -168,6 +177,7 @@ public class ClandestinoFragment extends Fragment implements OnMapReadyCallback,
 
     @Override
     public boolean onMapLongClick(@NonNull LatLng point) {
+
         Point destinationPoint = Point.fromLngLat(point.getLongitude(), point.getLatitude());
         Point originPoint = Point.fromLngLat(locationComponent.getLastKnownLocation().getLongitude(),
                 locationComponent.getLastKnownLocation().getLatitude());
@@ -275,7 +285,7 @@ public class ClandestinoFragment extends Fragment implements OnMapReadyCallback,
     private void setUpInfoWindowLayer(@NonNull Style loadedStyle) {
         loadedStyle.addLayer(new SymbolLayer(CALLOUT_LAYER_ID, GEOJSON_SOURCE_ID)
                 .withProperties(
-                        iconImage("{name}"),
+                        iconImage("{direccion}"),
                         iconAnchor(ICON_ANCHOR_BOTTOM),
                         iconAllowOverlap(true),
                         iconOffset(new Float[]{-2f, -28f}))
@@ -334,7 +344,7 @@ public class ClandestinoFragment extends Fragment implements OnMapReadyCallback,
         }
     }
 
-    static class LoadGeoJsonDataTask extends AsyncTask<Void, Void, FeatureCollection> {
+    private static class LoadGeoJsonDataTask extends AsyncTask<Void, Void, FeatureCollection> {
 
         private final WeakReference<ClandestinoFragment> activityRef;
 
@@ -367,7 +377,11 @@ public class ClandestinoFragment extends Fragment implements OnMapReadyCallback,
             }
 
             activity.setUpData(featureCollection);
-            new GenerateViewIconTask(activity).execute(featureCollection);
+            new ClandestinoFragment.GenerateViewIconTask(activity).execute(featureCollection);
+
+            Toast.makeText(activity.getContext(),
+                    R.string.tap_on_marker_instruction,
+                    Toast.LENGTH_SHORT).show();
         }
 
         public static String getJSON(String url) {
@@ -439,7 +453,7 @@ public class ClandestinoFragment extends Fragment implements OnMapReadyCallback,
                     BubbleLayout bubbleLayout = (BubbleLayout)
                             inflater.inflate(R.layout.symbol_layer_info_window_layout_callout, null);
 
-                    String str = feature.getStringProperty(PROPERTY_RESEÑA);
+                    String str = feature.getStringProperty(PROPERTY_NAME);
                     StringBuilder desc = new StringBuilder();
                     for (int i = 0; i < str.length(); i++) {
                         if (i > 0 && (i % 40 == 0)) {
@@ -454,12 +468,11 @@ public class ClandestinoFragment extends Fragment implements OnMapReadyCallback,
                     titleTextView.setText(name);
 
                     //if(feature.properties().has("horario"))
-                    String style = feature.getStringProperty(PROPERTY_CAPITAL);
-                    style += "\n" + "Contacto: " + feature.getStringProperty(PROPERTY_PRECIO);
-                    style += "\n" + "Dirección: " + str;
+                    String style = feature.getStringProperty(PROPERTY_CRITIC);
+                    style += "\n" + "Barrio: " + feature.getStringProperty(PROPERTY_BARRIO);
                     TextView descriptionTextView = bubbleLayout.findViewById(R.id.info_window_description);
                     descriptionTextView.setText(
-                            String.format(activity.getString(R.string.capital), style));
+                            String.format(activity.getString(R.string.clandestino), style));
 
 
                     int measureSpec = View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED);
@@ -469,7 +482,7 @@ public class ClandestinoFragment extends Fragment implements OnMapReadyCallback,
 
                     bubbleLayout.setArrowPosition(measuredWidth / 2 - 5);
 
-                    Bitmap bitmap = SymbolGenerator.generate(bubbleLayout);
+                    Bitmap bitmap = ClandestinoFragment.SymbolGenerator.generate(bubbleLayout);
                     imagesMap.put(name, bitmap);
                     viewMap.put(name, bubbleLayout);
                 }
@@ -490,9 +503,6 @@ public class ClandestinoFragment extends Fragment implements OnMapReadyCallback,
                     activity.refreshSource();
                 }
             }
-            Toast.makeText(activity.getContext(),
-                    R.string.tap_on_marker_instruction,
-                    Toast.LENGTH_SHORT).show();
         }
     }
 

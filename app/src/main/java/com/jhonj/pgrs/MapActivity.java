@@ -20,6 +20,7 @@ import com.jhonj.pgrs.Fragments.EmpresasFragment;
 import com.jhonj.pgrs.Fragments.GestoresFragment;
 import com.jhonj.pgrs.Fragments.IndebidoFragment;
 import com.jhonj.pgrs.Fragments.PrincipalFragment;
+import com.jhonj.pgrs.Fragments.ReporteFragment;
 
 public class MapActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
@@ -74,6 +75,13 @@ public class MapActivity extends AppCompatActivity implements NavigationView.OnN
             fragmentTransaction.replace(R.id.container, new GestoresFragment());
             fragmentTransaction.commit();
         }
+        if (item.getItemId() == R.id.reporte){
+            fragmentManager=getSupportFragmentManager();
+            fragmentTransaction=fragmentManager.beginTransaction();
+            fragmentTransaction.replace(R.id.container, new ReporteFragment());
+            fragmentTransaction.commit();
+        }
+
         if(item.getItemId()==R.id.empresas){
             fragmentManager=getSupportFragmentManager();
             fragmentTransaction=fragmentManager.beginTransaction();

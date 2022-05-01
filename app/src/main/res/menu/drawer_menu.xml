@@ -26,6 +26,10 @@
                 android:id="@+id/cestas"
                 android:icon="@drawable/cesta"
                 android:title="Ubicación cestas basura"/>
+            <item
+                android:id="@+id/reporte"
+                android:icon="@drawable/reporte"
+                android:title="Reportar afectación"/>
         </menu>
     </item>
     <item android:title="Acumulación de residuos">

@@ -39,6 +39,10 @@ android {
     }
 }
 
+ext {
+    retrofitVersion = "2.4.0"
+}
+
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
     implementation 'androidx.appcompat:appcompat:1.2.0'
@@ -59,6 +63,8 @@ dependencies {
 
     //Mapbox
     implementation 'com.mapbox.mapboxsdk:mapbox-android-sdk:9.6.1'
+   // implementation 'com.mapbox.mapboxsdk:mapbox-android-plugin-places-v9:0.12.0'
+
     implementation 'com.mapbox.mapboxsdk:mapbox-android-navigation-ui:0.42.6'
     implementation ('com.android.support:multidex:1.0.3'){
         transitive = true
@@ -66,4 +72,12 @@ dependencies {
     //webservice
     implementation 'com.amitshekhar.android:android-networking:1.0.2'
 
+
+    implementation 'de.hdodenhof:circleimageview:2.1.0'
+
+    //Https
+    implementation "com.squareup.retrofit2:retrofit:$retrofitVersion"
+    implementation "com.squareup.retrofit2:converter-gson:$retrofitVersion"
+    implementation 'com.google.code.gson:gson:2.8.2'
+    implementation 'com.squareup.okhttp3:logging-interceptor:3.11.0'
 }

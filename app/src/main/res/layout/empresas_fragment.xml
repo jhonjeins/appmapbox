@@ -14,5 +14,19 @@
         mapbox:mapbox_cameraTargetLng="-76.50782107542632"
         mapbox:mapbox_cameraZoom="11"/>
 
+    <ImageButton
+        android:id="@+id/img_report_empresas"
+        android:visibility="gone"
+        android:layout_marginEnd="16dp"
+        android:background="@android:color/transparent"
+        android:src="@drawable/report_icon"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        mapbox:layout_constraintBottom_toBottomOf="parent"
+        mapbox:layout_constraintEnd_toEndOf="parent"
+        mapbox:layout_constraintTop_toTopOf="parent">
+
+    </ImageButton>
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

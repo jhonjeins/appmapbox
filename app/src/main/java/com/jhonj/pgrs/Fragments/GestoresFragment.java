@@ -11,6 +11,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -80,9 +81,9 @@ public class GestoresFragment extends Fragment implements OnMapReadyCallback, Pe
     private final String URL_GET_DATA = "https://proygrs.herokuapp.com/gestores_getcopy.php";
     private static final String PROPERTY_SELECTED = "selected";
     private static final String PROPERTY_NAME = "nombre";
-    private static final String PROPERTY_CAPITAL = "actv_autor";
-    private static final String PROPERTY_PRECIO = "contacto";
-    private static final String PROPERTY_RESEÑA = "direccion";
+    private static final String PROPERTY_ACT = "actv_autor";
+    private static final String PROPERTY_CONTACT = "contacto";
+    private static final String PROPERTY_DIRECCION = "direccion";
     private GeoJsonSource geoJsonSource;
     FeatureCollection featureCollection;
     private static final String CALLOUT_LAYER_ID = "CALLOUT_LAYER_ID";
@@ -93,7 +94,7 @@ public class GestoresFragment extends Fragment implements OnMapReadyCallback, Pe
     private DirectionsRoute currentRoute;
     private static final String TAG = "DirectionsActivity";
     private NavigationMapRoute navigationMapRoute;
-
+    private ImageButton img_report;
     public GestoresFragment() {
     }
 
@@ -102,6 +103,14 @@ public class GestoresFragment extends Fragment implements OnMapReadyCallback, Pe
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         Mapbox.getInstance(getActivity(), getString(R.string.mapbox_access_token));
         mview = inflater.inflate(R.layout.gestores_fragment, container, false);
+        img_report = mview.findViewById(R.id.img_report);
+        img_report.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(getContext(),  "Hola", Toast.LENGTH_SHORT).show();
+            }
+        });
+
         return mview;
     }
 
@@ -172,6 +181,7 @@ public class GestoresFragment extends Fragment implements OnMapReadyCallback, Pe
 
     @Override
     public boolean onMapLongClick(@NonNull LatLng point) {
+
         Point destinationPoint = Point.fromLngLat(point.getLongitude(), point.getLatitude());
         Point originPoint = Point.fromLngLat(locationComponent.getLastKnownLocation().getLongitude(),
                 locationComponent.getLastKnownLocation().getLatitude());
@@ -279,7 +289,7 @@ public class GestoresFragment extends Fragment implements OnMapReadyCallback, Pe
     private void setUpInfoWindowLayer(@NonNull Style loadedStyle) {
         loadedStyle.addLayer(new SymbolLayer(CALLOUT_LAYER_ID, GEOJSON_SOURCE_ID)
                 .withProperties(
-                        iconImage("{name}"),
+                        iconImage("{nombre}"),
                         iconAnchor(ICON_ANCHOR_BOTTOM),
                         iconAllowOverlap(true),
                         iconOffset(new Float[]{-2f, -28f}))
@@ -372,6 +382,10 @@ public class GestoresFragment extends Fragment implements OnMapReadyCallback, Pe
 
             activity.setUpData(featureCollection);
             new GenerateViewIconTask(activity).execute(featureCollection);
+
+            Toast.makeText(activity.getContext(),
+                    R.string.tap_on_marker_instruction,
+                    Toast.LENGTH_SHORT).show();
         }
 
         public static String getJSON(String url) {
@@ -443,7 +457,7 @@ public class GestoresFragment extends Fragment implements OnMapReadyCallback, Pe
                     BubbleLayout bubbleLayout = (BubbleLayout)
                             inflater.inflate(R.layout.symbol_layer_info_window_layout_callout, null);
 
-                    String str = feature.getStringProperty(PROPERTY_RESEÑA);
+                    String str = feature.getStringProperty(PROPERTY_DIRECCION);
                     StringBuilder desc = new StringBuilder();
                     for (int i = 0; i < str.length(); i++) {
                         if (i > 0 && (i % 40 == 0)) {
@@ -458,12 +472,12 @@ public class GestoresFragment extends Fragment implements OnMapReadyCallback, Pe
                     titleTextView.setText(name);
 
                     //if(feature.properties().has("horario"))
-                    String style = feature.getStringProperty(PROPERTY_CAPITAL);
-                    style += "\n" + "Contacto: " + feature.getStringProperty(PROPERTY_PRECIO);
+                    String style = feature.getStringProperty(PROPERTY_ACT);
+                    style += "\n" + "Contacto: " + feature.getStringProperty(PROPERTY_CONTACT);
                     style += "\n" + "Dirección: " + str;
                     TextView descriptionTextView = bubbleLayout.findViewById(R.id.info_window_description);
                     descriptionTextView.setText(
-                            String.format(activity.getString(R.string.capital), style));
+                            String.format(activity.getString(R.string.gestores), style));
 
 
                     int measureSpec = View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED);
@@ -494,9 +508,6 @@ public class GestoresFragment extends Fragment implements OnMapReadyCallback, Pe
                     activity.refreshSource();
                 }
             }
-            Toast.makeText(activity.getContext(),
-                    R.string.tap_on_marker_instruction,
-                    Toast.LENGTH_SHORT).show();
         }
     }
 
