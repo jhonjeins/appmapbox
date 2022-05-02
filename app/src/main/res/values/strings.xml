@@ -15,6 +15,7 @@
 
     <string name="clandestino">Nivel de afectación: %1$s</string>
     <string name="gestores">Tipo residuo: %1$s</string>
+    <string name="microruta">Responsable: %1$s</string>
     <string name="bodega">Capacidad: %1$s</string>
     <string name="empresas">NIT: %1$s</string>
     <string name="tap_on_marker_instruction">Seleccione un marcador</string>

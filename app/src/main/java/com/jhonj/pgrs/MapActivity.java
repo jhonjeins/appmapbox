@@ -19,8 +19,10 @@ import com.jhonj.pgrs.Fragments.CriticosFragment;
 import com.jhonj.pgrs.Fragments.EmpresasFragment;
 import com.jhonj.pgrs.Fragments.GestoresFragment;
 import com.jhonj.pgrs.Fragments.IndebidoFragment;
+import com.jhonj.pgrs.Fragments.MicrorutaFragment;
 import com.jhonj.pgrs.Fragments.PrincipalFragment;
 import com.jhonj.pgrs.Fragments.ReporteFragment;
+import com.jhonj.pgrs.Fragments.ZonaFragment;
 
 public class MapActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
@@ -116,6 +118,18 @@ public class MapActivity extends AppCompatActivity implements NavigationView.OnN
             fragmentManager=getSupportFragmentManager();
             fragmentTransaction=fragmentManager.beginTransaction();
             fragmentTransaction.replace(R.id.container, new CestasFragment());
+            fragmentTransaction.commit();
+        }
+        if(item.getItemId()==R.id.zona_estudio){
+            fragmentManager=getSupportFragmentManager();
+            fragmentTransaction=fragmentManager.beginTransaction();
+            fragmentTransaction.replace(R.id.container, new ZonaFragment());
+            fragmentTransaction.commit();
+        }
+        if(item.getItemId()==R.id.microruta){
+            fragmentManager=getSupportFragmentManager();
+            fragmentTransaction=fragmentManager.beginTransaction();
+            fragmentTransaction.replace(R.id.container, new MicrorutaFragment());
             fragmentTransaction.commit();
         }
         return false;

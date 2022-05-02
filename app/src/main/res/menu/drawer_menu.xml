@@ -27,6 +27,14 @@
                 android:icon="@drawable/cesta"
                 android:title="Ubicación cestas basura"/>
             <item
+                android:id="@+id/microruta"
+                android:icon="@drawable/ic_map"
+                android:title="Micro rutas"/>
+            <item
+                android:id="@+id/zona_estudio"
+                android:icon="@drawable/ic_map"
+                android:title="Zona de estudio"/>
+            <item
                 android:id="@+id/reporte"
                 android:icon="@drawable/reporte"
                 android:title="Reportar afectación"/>
