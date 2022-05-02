@@ -89,23 +89,25 @@ public class MicrorutaFragment extends Fragment implements OnMapReadyCallback, P
     private PermissionsManager permissionsManager;
     private LocationComponent locationComponent;
     private final String ID = "microruta";
-    private final String URL_GET_DATA = "https://proygrs.herokuapp.com/microrutas_get.php";
+    private final String URL_GET_DATA = "https://proygrs.herokuapp.com/centro_microrutas.php";
     private static final String PROPERTY_SELECTED = "selected";
     private static final String PROPERTY_NAME = "id";
     private static final String PROPERTY_FRECUENCY = "frecuencia";
     private static final String PROPERTY_RESPONSABLE = "responsable";
     private GeoJsonSource geoJsonSource;
+    private GeoJsonSource geoJsonSource2;
     FeatureCollection featureCollection;
+    FeatureCollection featureCollection2;
     private static final String CALLOUT_LAYER_ID = "CALLOUT_LAYER_ID";
-    private static final String POLYGON_LAYER_ID = "POLYGON_LAYER_ID";
+    private static final String MARKER_LAYER_ID = "MARKER_LAYER_ID";
+    private static final String LINE_LAYER_ID = "LINE_LAYER_ID";
     private static final String GEOJSON_SOURCE_ID = "GEOJSON_SOURCE_ID";
-    private static final String POLYGON_IMAGE_ID = "POLYGON_IMAGE_ID";
+    private static final String GEOJSON_SOURCE_ID2 = "GEOJSON_SOURCE_ID2";
+    private static final String MARKER_IMAGE_ID = "MARKER_IMAGE_ID";
     //ruteo
     private DirectionsRoute currentRoute;
     private static final String TAG = "DirectionsActivity";
     private NavigationMapRoute navigationMapRoute;
-
-    private static final String MARKER_IMAGE_ID = "MARKER_IMAGE_ID";
     private ImageButton img_report_microruta;
     public MicrorutaFragment() {
     }
@@ -143,7 +145,8 @@ public class MicrorutaFragment extends Fragment implements OnMapReadyCallback, P
                     public void onStyleLoaded(@NonNull Style style) {
                         enableLocationComponent(style);
                         addDestinationIconSymbolLayer(style);
-                        new LoadGeoJsonDataTask(MicrorutaFragment.this).execute();
+                        new MicrorutaFragment.LoadGeoJsonDataTask2(MicrorutaFragment.this).execute();
+                        new MicrorutaFragment.LoadGeoJsonDataTask(MicrorutaFragment.this).execute();
                         mapboxMap.addOnMapClickListener(MicrorutaFragment.this);
                         mapboxMap.addOnMapLongClickListener(MicrorutaFragment.this);
 
@@ -180,7 +183,7 @@ public class MicrorutaFragment extends Fragment implements OnMapReadyCallback, P
             permissionsManager = new PermissionsManager(this);
             permissionsManager.requestLocationPermissions(getActivity());
         }
-        loadedMapStyle.addImage(POLYGON_IMAGE_ID,
+        loadedMapStyle.addImage(MARKER_IMAGE_ID,
                 BitmapFactory.decodeResource(this.getResources(), R.drawable.mapbox_marker_icon_default));
 
     }
@@ -260,27 +263,44 @@ public class MicrorutaFragment extends Fragment implements OnMapReadyCallback, P
         }
     }
 
+    public void setUpData2(final FeatureCollection collection) {
+        featureCollection2 = collection;
+        if (mapboxMap != null) {
+            mapboxMap.getStyle(style -> {
+                setupSource2(style);
+                setUpLineLayer(style);
+
+            });
+        }
+    }
     public void setUpData(final FeatureCollection collection) {
         featureCollection = collection;
         if (mapboxMap != null) {
             mapboxMap.getStyle(style -> {
                 setupSource(style);
+                setUpImage(style);
                 setUpMarkerLayer(style);
                 setUpInfoWindowLayer(style);
+
             });
         }
     }
 
 
+
+    private void setupSource2(@NonNull Style loadedStyle) {
+        geoJsonSource2 = new GeoJsonSource(GEOJSON_SOURCE_ID2, featureCollection2);
+        loadedStyle.addSource(geoJsonSource2);
+    }
     private void setupSource(@NonNull Style loadedStyle) {
         geoJsonSource = new GeoJsonSource(GEOJSON_SOURCE_ID, featureCollection);
         loadedStyle.addSource(geoJsonSource);
     }
+
     private void setUpImage(@NonNull Style loadedStyle) {
         loadedStyle.addImage(MARKER_IMAGE_ID, BitmapFactory.decodeResource(
-                this.getResources(), R.drawable.gestores));
+                this.getResources(), R.drawable.flecha));
     }
-
 
     private void refreshSource() {
         if (geoJsonSource != null && featureCollection != null) {
@@ -288,14 +308,22 @@ public class MicrorutaFragment extends Fragment implements OnMapReadyCallback, P
         }
     }
 
-    private void setUpMarkerLayer(@NonNull Style style) {
-        style.addLayer(new LineLayer(POLYGON_LAYER_ID, GEOJSON_SOURCE_ID)
+    private void setUpLineLayer(@NonNull Style style) {
+        style.addLayer(new LineLayer(LINE_LAYER_ID, GEOJSON_SOURCE_ID2)
                 .withProperties(PropertyFactory.lineCap(Property.LINE_CAP_BUTT),
                         PropertyFactory.lineJoin(Property.LINE_JOIN_MITER),
                         PropertyFactory.lineOpacity(.7f),
-                        PropertyFactory.lineWidth(5f),
+                        PropertyFactory.lineWidth(3f),
                         PropertyFactory.lineColor(Color.parseColor("#067907"))));
+    }
 
+    private void setUpMarkerLayer(@NonNull Style loadedStyle) {
+        loadedStyle.addLayer(new SymbolLayer(MARKER_LAYER_ID, GEOJSON_SOURCE_ID)
+                .withProperties(
+                        iconImage(MARKER_IMAGE_ID),
+                        iconAllowOverlap(true),
+                        iconOffset(new Float[]{0f, -8f})
+                ));
     }
 
     private void setUpInfoWindowLayer(@NonNull Style loadedStyle) {
@@ -309,7 +337,7 @@ public class MicrorutaFragment extends Fragment implements OnMapReadyCallback, P
     }
 
     private boolean handleClickIcon(PointF screenPoint) {
-        List<Feature> features = mapboxMap.queryRenderedFeatures(screenPoint, POLYGON_LAYER_ID);
+        List<Feature> features = mapboxMap.queryRenderedFeatures(screenPoint, MARKER_LAYER_ID);
         if (!features.isEmpty()) {
             String name = features.get(0).getStringProperty(PROPERTY_NAME);
             List<Feature> featureList = featureCollection.features();
@@ -374,7 +402,7 @@ public class MicrorutaFragment extends Fragment implements OnMapReadyCallback, P
             if (activity == null) {
                 return null;
             }
-            String geoJson = getJSON("https://proygrs.herokuapp.com/microrutas_get.php");
+            String geoJson = getJSON("https://proygrs.herokuapp.com/centro_microrutas.php");
             return FeatureCollection.fromJson(geoJson);
         }
 
@@ -393,11 +421,80 @@ public class MicrorutaFragment extends Fragment implements OnMapReadyCallback, P
             }
 
             activity.setUpData(featureCollection);
-            new GenerateViewIconTask(activity).execute(featureCollection);
+            new MicrorutaFragment.GenerateViewIconTask(activity).execute(featureCollection);
 
             Toast.makeText(activity.getContext(),
                     R.string.tap_on_marker_instruction,
                     Toast.LENGTH_SHORT).show();
+        }
+
+        public static String getJSON(String url) {
+            HttpsURLConnection con = null;
+            try {
+                URL u = new URL(url);
+                con = (HttpsURLConnection) u.openConnection();
+
+                con.connect();
+
+
+                BufferedReader br = new BufferedReader(new InputStreamReader(con.getInputStream()));
+                StringBuilder sb = new StringBuilder();
+                String line;
+                while ((line = br.readLine()) != null) {
+                    sb.append(line + "\n");
+                }
+                br.close();
+                //Log.d("json",sb.toString());
+                return sb.toString();
+
+
+            } catch (MalformedURLException ex) {
+                ex.printStackTrace();
+            } catch (IOException ex) {
+                ex.printStackTrace();
+            } finally {
+                if (con != null) {
+                    try {
+                        con.disconnect();
+                    } catch (Exception ex) {
+                        ex.printStackTrace();
+                    }
+                }
+            }
+            return null;
+        }
+
+    }
+
+    private static class LoadGeoJsonDataTask2 extends AsyncTask<Void, Void, FeatureCollection> {
+
+        private final WeakReference<MicrorutaFragment> activityRef;
+
+        LoadGeoJsonDataTask2(MicrorutaFragment activity) {
+            this.activityRef = new WeakReference<>(activity);
+        }
+
+        @Override
+        protected FeatureCollection doInBackground(Void... params) {
+            MicrorutaFragment activity = activityRef.get();
+            if (activity == null) {
+                return null;
+            }
+            String geoJson = getJSON("https://proygrs.herokuapp.com/microrutas_get.php");
+            return FeatureCollection.fromJson(geoJson);
+        }
+
+
+        @Override
+        protected void onPostExecute(FeatureCollection featureCollection2) {
+            super.onPostExecute(featureCollection2);
+            MicrorutaFragment activity = activityRef.get();
+            if (featureCollection2 == null || activity == null) {
+                return;
+            }
+
+            activity.setUpData2(featureCollection2);
+            new MicrorutaFragment.GenerateViewIconTask(activity).execute(featureCollection2);
         }
 
         public static String getJSON(String url) {
@@ -469,7 +566,7 @@ public class MicrorutaFragment extends Fragment implements OnMapReadyCallback, P
                     BubbleLayout bubbleLayout = (BubbleLayout)
                             inflater.inflate(R.layout.symbol_layer_info_window_layout_callout, null);
 
-                    String str = feature.getStringProperty(PROPERTY_NAME);
+                    String str = feature.getStringProperty(PROPERTY_FRECUENCY);
                     StringBuilder desc = new StringBuilder();
                     for (int i = 0; i < str.length(); i++) {
                         if (i > 0 && (i % 40 == 0)) {
@@ -498,7 +595,7 @@ public class MicrorutaFragment extends Fragment implements OnMapReadyCallback, P
 
                     bubbleLayout.setArrowPosition(measuredWidth / 2 - 5);
 
-                    Bitmap bitmap = SymbolGenerator.generate(bubbleLayout);
+                    Bitmap bitmap = MicrorutaFragment.SymbolGenerator.generate(bubbleLayout);
                     imagesMap.put(name, bitmap);
                     viewMap.put(name, bubbleLayout);
                 }
