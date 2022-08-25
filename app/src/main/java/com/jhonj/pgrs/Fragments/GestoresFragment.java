@@ -81,9 +81,9 @@ public class GestoresFragment extends Fragment implements OnMapReadyCallback, Pe
     private final String URL_GET_DATA = "https://proygrs.herokuapp.com/gestores_getcopy.php";
     private static final String PROPERTY_SELECTED = "selected";
     private static final String PROPERTY_NAME = "nombre";
-    private static final String PROPERTY_ACT = "actv_autor";
-    private static final String PROPERTY_CONTACT = "contacto";
-    private static final String PROPERTY_DIRECCION = "direccion";
+    private static final String PROPERTY_CAPITAL = "actv_autor";
+    private static final String PROPERTY_PRECIO = "contacto";
+    private static final String PROPERTY_RESEÑA = "direccion";
     private GeoJsonSource geoJsonSource;
     FeatureCollection featureCollection;
     private static final String CALLOUT_LAYER_ID = "CALLOUT_LAYER_ID";
@@ -382,10 +382,6 @@ public class GestoresFragment extends Fragment implements OnMapReadyCallback, Pe
 
             activity.setUpData(featureCollection);
             new GenerateViewIconTask(activity).execute(featureCollection);
-
-            Toast.makeText(activity.getContext(),
-                    R.string.tap_on_marker_instruction,
-                    Toast.LENGTH_SHORT).show();
         }
 
         public static String getJSON(String url) {
@@ -457,7 +453,7 @@ public class GestoresFragment extends Fragment implements OnMapReadyCallback, Pe
                     BubbleLayout bubbleLayout = (BubbleLayout)
                             inflater.inflate(R.layout.symbol_layer_info_window_layout_callout, null);
 
-                    String str = feature.getStringProperty(PROPERTY_DIRECCION);
+                    String str = feature.getStringProperty(PROPERTY_RESEÑA);
                     StringBuilder desc = new StringBuilder();
                     for (int i = 0; i < str.length(); i++) {
                         if (i > 0 && (i % 40 == 0)) {
@@ -472,12 +468,12 @@ public class GestoresFragment extends Fragment implements OnMapReadyCallback, Pe
                     titleTextView.setText(name);
 
                     //if(feature.properties().has("horario"))
-                    String style = feature.getStringProperty(PROPERTY_ACT);
-                    style += "\n" + "Contacto: " + feature.getStringProperty(PROPERTY_CONTACT);
+                    String style = feature.getStringProperty(PROPERTY_CAPITAL);
+                    style += "\n" + "Contacto: " + feature.getStringProperty(PROPERTY_PRECIO);
                     style += "\n" + "Dirección: " + str;
                     TextView descriptionTextView = bubbleLayout.findViewById(R.id.info_window_description);
                     descriptionTextView.setText(
-                            String.format(activity.getString(R.string.gestores), style));
+                            String.format(activity.getString(R.string.capital), style));
 
 
                     int measureSpec = View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED);

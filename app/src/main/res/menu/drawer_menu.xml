@@ -6,6 +6,13 @@
                 android:id="@+id/inicio"
                 android:icon="@drawable/ic_map"
                 android:title="Inicio"/>
+
+
+            <item
+                android:id="@+id/reporte"
+                android:icon="@drawable/ic_map"
+                android:title="Reportes"/>
+
             <item
                 android:id="@+id/empresas"
                 android:icon="@drawable/truck"
@@ -26,18 +33,6 @@
                 android:id="@+id/cestas"
                 android:icon="@drawable/cesta"
                 android:title="Ubicación cestas basura"/>
-            <item
-                android:id="@+id/microruta"
-                android:icon="@drawable/ic_map"
-                android:title="Micro rutas"/>
-            <item
-                android:id="@+id/zona_estudio"
-                android:icon="@drawable/ic_map"
-                android:title="Zona de estudio"/>
-            <item
-                android:id="@+id/reporte"
-                android:icon="@drawable/reporte"
-                android:title="Reportar afectación"/>
         </menu>
     </item>
     <item android:title="Acumulación de residuos">

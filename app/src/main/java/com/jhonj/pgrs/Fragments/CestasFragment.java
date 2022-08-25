@@ -11,7 +11,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -60,8 +59,6 @@ import static com.mapbox.mapboxsdk.style.expressions.Expression.eq;
 import static com.mapbox.mapboxsdk.style.expressions.Expression.get;
 import static com.mapbox.mapboxsdk.style.expressions.Expression.literal;
 import static com.mapbox.mapboxsdk.style.layers.Property.ICON_ANCHOR_BOTTOM;
-import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.fillColor;
-import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.fillOpacity;
 import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.iconAllowOverlap;
 import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.iconAnchor;
 import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.iconIgnorePlacement;
@@ -77,11 +74,10 @@ public class CestasFragment extends Fragment implements OnMapReadyCallback, Perm
     private final String ID = "cestas";
     private final String URL_GET_DATA = "https://proygrs.herokuapp.com/cestas.php";
     private static final String PROPERTY_SELECTED = "selected";
-    private static final String PROPERTY_NAME = "direccion";
-    private static final String PROPERTY_ESTADO = "estado";
-    private static final String PROPERTY_OPERADOR = "operador";
-    private static final String PROPERTY_BARRIO = "barrio";
-    private static final String PROPERTY_DIRECCION = "direccion";
+    private static final String PROPERTY_NAME = "cunombar";
+    private static final String PROPERTY_CAPITAL = "cuope";
+    private static final String PROPERTY_PRECIO = "cuest";
+    private static final String PROPERTY_RESEÑA = "cudir";
     private GeoJsonSource geoJsonSource;
     FeatureCollection featureCollection;
     private static final String CALLOUT_LAYER_ID = "CALLOUT_LAYER_ID";
@@ -92,7 +88,7 @@ public class CestasFragment extends Fragment implements OnMapReadyCallback, Perm
     private DirectionsRoute currentRoute;
     private static final String TAG = "DirectionsActivity";
     private NavigationMapRoute navigationMapRoute;
-    private ImageButton img_report_cestas;
+
     public CestasFragment() {
     }
 
@@ -101,14 +97,6 @@ public class CestasFragment extends Fragment implements OnMapReadyCallback, Perm
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         Mapbox.getInstance(getActivity(), getString(R.string.mapbox_access_token));
         mview = inflater.inflate(R.layout.cestas_fragment, container, false);
-        img_report_cestas = mview.findViewById(R.id.img_report_cestas);
-        img_report_cestas.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Toast.makeText(getContext(),  "Hola", Toast.LENGTH_SHORT).show();
-            }
-        });
-
         return mview;
     }
 
@@ -129,10 +117,9 @@ public class CestasFragment extends Fragment implements OnMapReadyCallback, Perm
                     public void onStyleLoaded(@NonNull Style style) {
                         enableLocationComponent(style);
                         addDestinationIconSymbolLayer(style);
-                        new CestasFragment.LoadGeoJsonDataTask(CestasFragment.this).execute();
+                        new LoadGeoJsonDataTask(CestasFragment.this).execute();
                         mapboxMap.addOnMapClickListener(CestasFragment.this);
                         mapboxMap.addOnMapLongClickListener(CestasFragment.this);
-
                     }
                 }
         );
@@ -179,7 +166,6 @@ public class CestasFragment extends Fragment implements OnMapReadyCallback, Perm
 
     @Override
     public boolean onMapLongClick(@NonNull LatLng point) {
-
         Point destinationPoint = Point.fromLngLat(point.getLongitude(), point.getLatitude());
         Point originPoint = Point.fromLngLat(locationComponent.getLastKnownLocation().getLongitude(),
                 locationComponent.getLastKnownLocation().getLatitude());
@@ -287,7 +273,7 @@ public class CestasFragment extends Fragment implements OnMapReadyCallback, Perm
     private void setUpInfoWindowLayer(@NonNull Style loadedStyle) {
         loadedStyle.addLayer(new SymbolLayer(CALLOUT_LAYER_ID, GEOJSON_SOURCE_ID)
                 .withProperties(
-                        iconImage("{direccion}"),
+                        iconImage("{name}"),
                         iconAnchor(ICON_ANCHOR_BOTTOM),
                         iconAllowOverlap(true),
                         iconOffset(new Float[]{-2f, -28f}))
@@ -346,7 +332,7 @@ public class CestasFragment extends Fragment implements OnMapReadyCallback, Perm
         }
     }
 
-    private static class LoadGeoJsonDataTask extends AsyncTask<Void, Void, FeatureCollection> {
+    static class LoadGeoJsonDataTask extends AsyncTask<Void, Void, FeatureCollection> {
 
         private final WeakReference<CestasFragment> activityRef;
 
@@ -379,11 +365,7 @@ public class CestasFragment extends Fragment implements OnMapReadyCallback, Perm
             }
 
             activity.setUpData(featureCollection);
-            new CestasFragment.GenerateViewIconTask(activity).execute(featureCollection);
-
-            Toast.makeText(activity.getContext(),
-                    R.string.tap_on_marker_instruction,
-                    Toast.LENGTH_SHORT).show();
+            new GenerateViewIconTask(activity).execute(featureCollection);
         }
 
         public static String getJSON(String url) {
@@ -455,7 +437,7 @@ public class CestasFragment extends Fragment implements OnMapReadyCallback, Perm
                     BubbleLayout bubbleLayout = (BubbleLayout)
                             inflater.inflate(R.layout.symbol_layer_info_window_layout_callout, null);
 
-                    String str = feature.getStringProperty(PROPERTY_DIRECCION);
+                    String str = feature.getStringProperty(PROPERTY_RESEÑA);
                     StringBuilder desc = new StringBuilder();
                     for (int i = 0; i < str.length(); i++) {
                         if (i > 0 && (i % 40 == 0)) {
@@ -470,12 +452,12 @@ public class CestasFragment extends Fragment implements OnMapReadyCallback, Perm
                     titleTextView.setText(name);
 
                     //if(feature.properties().has("horario"))
-                    String style = feature.getStringProperty(PROPERTY_OPERADOR);
-                    style += "\n" + "Estado: " + feature.getStringProperty(PROPERTY_ESTADO);
-                    style += "\n" + "Barrio: " + feature.getStringProperty(PROPERTY_BARRIO);
+                    String style = feature.getStringProperty(PROPERTY_CAPITAL);
+                    style += "\n" + "Contacto: " + feature.getStringProperty(PROPERTY_PRECIO);
+                    style += "\n" + "Dirección: " + str;
                     TextView descriptionTextView = bubbleLayout.findViewById(R.id.info_window_description);
                     descriptionTextView.setText(
-                            String.format(activity.getString(R.string.cestas), style));
+                            String.format(activity.getString(R.string.capital), style));
 
 
                     int measureSpec = View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED);
@@ -485,7 +467,7 @@ public class CestasFragment extends Fragment implements OnMapReadyCallback, Perm
 
                     bubbleLayout.setArrowPosition(measuredWidth / 2 - 5);
 
-                    Bitmap bitmap = CestasFragment.SymbolGenerator.generate(bubbleLayout);
+                    Bitmap bitmap = SymbolGenerator.generate(bubbleLayout);
                     imagesMap.put(name, bitmap);
                     viewMap.put(name, bubbleLayout);
                 }
@@ -506,6 +488,9 @@ public class CestasFragment extends Fragment implements OnMapReadyCallback, Perm
                     activity.refreshSource();
                 }
             }
+            Toast.makeText(activity.getContext(),
+                    R.string.tap_on_marker_instruction,
+                    Toast.LENGTH_SHORT).show();
         }
     }
 

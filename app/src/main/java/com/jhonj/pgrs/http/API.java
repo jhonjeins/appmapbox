@@ -9,6 +9,6 @@ import retrofit2.http.POST;
 
 public interface API {
 
-    @POST("https://proygrs.herokuapp.com/agregar_reporte.php")
+    @POST("agregar_reporte.php")
     Call<ResponseReporte> enviarReporte(@Body Reporte param);
 }

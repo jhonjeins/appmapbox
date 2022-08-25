@@ -93,7 +93,6 @@ public class ReporteFragment extends Fragment implements OnMapReadyCallback, Per
 
 
 
-
     }
 
 
@@ -137,7 +136,6 @@ public class ReporteFragment extends Fragment implements OnMapReadyCallback, Per
                         //mapboxMap.moveCamera(CameraUpdateFactory.newCameraPosition(pos));
                         mapboxMap.animateCamera(CameraUpdateFactory.newCameraPosition(pos),1000);
                     }
-
                 });
 
 

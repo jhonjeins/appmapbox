@@ -10,15 +10,8 @@
     <string name="start_navigation">Start navigation</string>
 
     <!-- Infowindow SymbolLayer -->
-    <string name="capital">Tipo acumulación: %1$s</string>
-    <string name="cestas">Operador: %1$s</string>
-
-    <string name="clandestino">Nivel de afectación: %1$s</string>
-    <string name="gestores">Tipo residuo: %1$s</string>
-    <string name="microruta">Responsable: %1$s</string>
-    <string name="bodega">Capacidad: %1$s</string>
-    <string name="empresas">NIT: %1$s</string>
-    <string name="tap_on_marker_instruction">Seleccione un marcador</string>
+    <string name="capital">Horario: %1$s</string>
+    <string name="tap_on_marker_instruction">Tap on a marker</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="visualizacion_de_capas">Visualización de Capas</string>
