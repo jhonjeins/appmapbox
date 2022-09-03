@@ -6,13 +6,6 @@
                 android:id="@+id/inicio"
                 android:icon="@drawable/ic_map"
                 android:title="Inicio"/>
-
-
-            <item
-                android:id="@+id/reporte"
-                android:icon="@drawable/ic_map"
-                android:title="Reportes"/>
-
             <item
                 android:id="@+id/empresas"
                 android:icon="@drawable/truck"
@@ -22,10 +15,6 @@
                 android:icon="@drawable/gestores"
                 android:title="Gestores de residuos"/>
             <item
-                android:id="@+id/criticos"
-                android:icon="@drawable/critico"
-                android:title="Puntos criticos"/>
-            <item
                 android:id="@+id/bodegas"
                 android:icon="@drawable/almacen"
                 android:title="Bodegas reciclaje"/>
@@ -33,6 +22,18 @@
                 android:id="@+id/cestas"
                 android:icon="@drawable/cesta"
                 android:title="Ubicación cestas basura"/>
+            <item
+                android:id="@+id/microruta"
+                android:icon="@drawable/microrutas"
+                android:title="Micro rutas"/>
+            <item
+                android:id="@+id/zona_estudio"
+                android:icon="@drawable/zona_estudio"
+                android:title="Zona de estudio"/>
+            <item
+                android:id="@+id/reporte"
+                android:icon="@drawable/reporte"
+                android:title="Reportar afectación"/>
         </menu>
     </item>
     <item android:title="Acumulación de residuos">
@@ -45,6 +46,14 @@
                 android:id="@+id/clandestino"
                 android:icon="@drawable/basura"
                 android:title="Disposición inadecuada"/>
+        </menu>
+    </item>
+    <item android:title="Descargas">
+        <menu>
+            <item
+                android:id="@+id/descarga"
+                android:icon="@drawable/descarga"
+                android:title="Descargar manual"/>
         </menu>
     </item>
 </menu>

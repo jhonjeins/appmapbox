@@ -30,7 +30,6 @@ public class IniciarSesionActivity extends AppCompatActivity {
         correo = findViewById(R.id.correo);
         contrasena = findViewById(R.id.contraseña);
     }
-
     public void iniciarSesion (View view){
         mAuth.signInWithEmailAndPassword(correo.getText().toString(), contrasena.getText().toString())
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {

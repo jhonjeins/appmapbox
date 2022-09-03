@@ -9,4 +9,4 @@
     android:padding="5sp"
     android:textColor="@color/black"
     android:background="@color/white"
-    android:id="@+id/spinner_item_rack"/>
+    android:id="@+id/spinner_item_residuo"/>

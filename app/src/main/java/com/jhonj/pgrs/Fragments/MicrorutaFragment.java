@@ -425,7 +425,7 @@ public class MicrorutaFragment extends Fragment implements OnMapReadyCallback, P
 
             Toast.makeText(activity.getContext(),
                     R.string.tap_on_marker_instruction,
-                    Toast.LENGTH_SHORT).show();
+                    Toast.LENGTH_LONG).show();
         }
 
         public static String getJSON(String url) {

@@ -403,7 +403,7 @@ public class ZonaFragment extends Fragment implements OnMapReadyCallback, Permis
 
             Toast.makeText(activity.getContext(),
                     R.string.tap_on_marker_instruction,
-                    Toast.LENGTH_SHORT).show();
+                    Toast.LENGTH_LONG).show();
         }
 
         public static String getJSON(String url) {

@@ -4,22 +4,24 @@ public class Reporte {
 
     private String nombre;
     private String correo;
+    private String fecha;
+    private String residuo;
     private int critico;
     private double latitud;
     private double longitud;
-    private String geo;
 
 
     public Reporte() {
     }
 
-    public Reporte(String nombre, String correo, int critico, double latitud, double longitud, String geo) {
+    public Reporte(String nombre, String correo, String fecha, String residuo, int critico, double latitud, double longitud) {
         this.nombre = nombre;
         this.correo = correo;
         this.critico = critico;
         this.latitud = latitud;
         this.longitud = longitud;
-        this.geo = geo;
+        this.fecha = fecha;
+        this.residuo = residuo;
     }
 
     public String getNombre() {
@@ -37,6 +39,14 @@ public class Reporte {
     public void setCorreo(String correo) {
         this.correo = correo;
     }
+
+    public String getFecha() { return fecha; }
+
+    public void setFecha(String fecha) {this.fecha = fecha;}
+
+    public String getResiduo(){ return residuo;}
+
+    public void setResiduo (String residuo) {this.residuo = residuo;}
 
     public int getCritico() {
         return critico;
@@ -60,13 +70,5 @@ public class Reporte {
 
     public void setLongitud(double longitud) {
         this.longitud = longitud;
-    }
-
-    public String getGeo() {
-        return geo;
-    }
-
-    public void setGeo(String geo) {
-        this.geo = geo;
     }
 }
